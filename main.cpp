@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include <unordered_set>
-
+#include <string>
 
 struct Node
 {
@@ -16,13 +16,16 @@ struct Node
     uint64_t value;
 };
 
-class RowProxy;
+bool operator == (const Node& lNode, const Node& rNode)
+{
+    return ( (lNode.i == rNode.i) && (lNode.j == rNode.j) );
+}
 
 struct NodeHash
 {
     size_t operator () (const Node& node) const
     {
-
+        return std::hash<size_t>{}(node.i) + std::hash<size_t>{}(node.j);
     }
 };
 
@@ -62,8 +65,6 @@ public:
             {
                 m_j = j_;
             }
-
-
 
             return m_parent->getDefVal();
         }
@@ -140,7 +141,7 @@ public:
 private:
     T m_defValue;
 
-    std::unordered_set<RowProxy, MatrixHash> m_data;
+    std::unordered_set<RowProxy, NodeHash> m_data;
 };
 
 

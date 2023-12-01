@@ -25,6 +25,15 @@ jobs:
       - run: sudo apt-get install libgtest-dev libgmock-dev libtbb-dev -y
       - run: sudo apt-get install build-essential libgl1-mesa-dev qt6-base-dev
       - run: sudo apt-get install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5svg5 libqt5widgets5
+      - run: git clone https://github.com/gperftools/gperftools
+      - run: cd gperftools
+      - run: ./autogen.sh
+      - run: ./configure
+      - run: make
+      - run: sudo make install
+      - run: sudo ln -s /usr/local/lib/libprofiler.so /usr/lib/libprofiler.so.0
+      - run: sudo apt install -yq golang
+      - run: go get -u github.com/google/pprof
       - run: sudo mkdir /usr/src/googletest/build
       - run: cd /usr/src/googletest/build && sudo rm -f ../CMakeCache.txt && sudo cmake ../ && sudo make
       - run: sudo cp /usr/src/googletest/build/lib/*.a /usr/lib
@@ -51,14 +60,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./gof_mvc-0.0.${{ github.run_number }}-Linux.deb
-          asset_name: gof_mvc-0.0.${{ github.run_number }}-Linux.deb
+          asset_path: ./matrix-0.0.${{ github.run_number }}-Linux.deb
+          asset_name: matrix-0.0.${{ github.run_number }}-Linux.deb
           asset_content_type: application/vnd.debian.binary-package
       - name: Upload deb package for job_run
         uses: actions/upload-artifact@v3
         with:
           name: package
-          path: ./gof_mvc-0.0.${{ github.run_number }}-Linux.deb
+          path: ./matrix-0.0.${{ github.run_number }}-Linux.deb
   job_run:
     needs: [job_build]
     runs-on: ubuntu-latest
@@ -69,10 +78,10 @@ jobs:
           name: package
       - shell: bash
         run: |
-          sudo apt install ./gof_mvc-0.0.${{ github.run_number }}-Linux.deb
+          sudo apt install ./matrix-0.0.${{ github.run_number }}-Linux.deb
       - name: Checking
         run: |
-          sudo cat gof_mvc | md5sum
+          sudo cat matrix | md5sum
 
   job_docs:
     needs: [job_build]
