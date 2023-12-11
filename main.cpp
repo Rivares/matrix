@@ -50,32 +50,28 @@ public:
             return (*this);
         }
 
-        void operator = (const T& val_)
+        T& operator = (const T& val_)
         {
             std::cout << __PRETTY_FUNCTION__ << ' ' << val_ << '\n';
 
             if (val_ != m_parent->m_defValue)
             {
                 this->m_value = val_;
-                m_parent->m_data.insert(*this);
-                m_parent->m_data1.insert({this->m_i, this->m_j, this->m_value, this->m_parent});
+                m_parent->m_data.insert({this->m_i, this->m_j, this->m_value});
             }
             else
             {
-                m_parent->m_data.erase(*this);
-                m_parent->m_data1.erase({this->m_i, this->m_j, this->m_value, this->m_parent});
+                m_parent->m_data.erase({this->m_i, this->m_j, this->m_value});
             }
+
+            return this->m_value;
         }
 
         bool operator == (const T& rVal_) const
         {
             std::cout << __PRETTY_FUNCTION__ << '\n';
 
-            Node findingNode {m_i, m_j, m_value};
-
-//            if (auto it = m_parent->m_data.find(findingNode); it != m_parent->m_data.end())
-//            {   return ((*it).m_value == rVal_);  }
-            if (auto it = m_parent->m_data1.find({m_i, m_j, m_value, m_parent}); it != m_parent->m_data1.end())
+            if (auto it = m_parent->m_data.find({m_i, m_j, m_value}); it != m_parent->m_data.end())
             {   return (std::get<2>((*it)) == rVal_);  }
 
             return false;
@@ -98,31 +94,15 @@ public:
 
     struct NodeHash
     {
-        size_t operator () (const Node& node) const
-        {
-            return std::hash<size_t>{}(node.m_i) + std::hash<size_t>{}(node.m_j);
-        }
-    };
-
-    struct NodeEqual
-    {
-        bool operator () (const Node& lNode, const Node& rNode) const
-        {
-            return ( (lNode.m_i == rNode.m_i) && (lNode.m_j == rNode.m_j) );
-        }
-    };
-
-    struct Node1Hash
-    {
-        size_t operator () (const std::tuple<T, T, T, Matrix*>& node) const
+        size_t operator () (const std::tuple<T, T, T>& node) const
         {
             return std::hash<size_t>{}(std::get<0>(node)) + std::hash<size_t>{}(std::get<1>(node));
         }
     };
 
-    struct Node1Equal
+    struct NodeEqual
     {
-        bool operator () (const std::tuple<T, T, T, Matrix*>& lNode, const std::tuple<T, T, T, Matrix*>& rNode) const
+        bool operator () (const std::tuple<T, T, T>& lNode, const std::tuple<T, T, T>& rNode) const
         {
             return ( (std::get<0>(lNode) == std::get<0>(rNode)) && (std::get<1>(lNode) == std::get<1>(rNode)) );
         }
@@ -140,29 +120,28 @@ public:
         return Node();
     }
 
-    // TODO Impl iterators
+
     auto begin()
-    {   return m_data1.begin();  }
+    {   return m_data.begin();  }
 
     auto cbegin() const
-    {   return m_data1.cbegin();  }
+    {   return m_data.cbegin();  }
 
     auto end()
-    {   return m_data1.end();  }
+    {   return m_data.end();  }
 
     auto cend() const
-    {   return m_data1.cend();  }
+    {   return m_data.cend();  }
 
 
 
     uint64_t size() const
-    {   return m_data1.size(); }
+    {   return m_data.size(); }
 
 private:
     T m_defValue;
 
-    std::unordered_set<Node, NodeHash, NodeEqual> m_data;
-    std::unordered_set<std::tuple<T, T, T, Matrix*>, Node1Hash, Node1Equal> m_data1;
+    std::unordered_set<std::tuple<T, T, T>, NodeHash, NodeEqual> m_data;
 };
 
 
@@ -222,19 +201,17 @@ int main()
         assert(matrix[100][100] == 314);
         assert(matrix.size() == 2);
 
+        ((matrix[100][101] = 314) = 0) = 217;
+        assert(matrix.size() == 3);
 
-//        // выведется одна строка
 //        // 100100314
         for(auto item: matrix)
         {
             int x;
             int y;
             int v;
-            Matrix<int, -1>* vv;
-            std::tie(x, y, v, vv) = item;
+            std::tie(x, y, v) = item;
             std::cout << x << y << v << std::endl;
-//            auto [xx, yy, vv, ww] = item;
-//            std::cout << xx << yy << vv << std::endl;
         }
 
         std::cout << "\n\nDestructions objects:\n";
