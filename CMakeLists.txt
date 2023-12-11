@@ -28,6 +28,7 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pg")
 
 add_executable(${PROJECT_NAME}
     main.cpp
+    lib.hpp
 )
 
 
