@@ -47,10 +47,13 @@ public:
             if (j_ >= 0)
             {   m_j = j_;   }
 
+            if (auto it = m_parent->m_data.find({m_i, m_j, m_value}); it != m_parent->m_data.end())
+            {   m_value = std::get<2>(*it);  }
+
             return (*this);
         }
 
-        T& operator = (const T& val_)
+        Node& operator = (const T& val_)
         {
             std::cout << __PRETTY_FUNCTION__ << ' ' << val_ << '\n';
 
@@ -64,7 +67,7 @@ public:
                 m_parent->m_data.erase({this->m_i, this->m_j, this->m_value});
             }
 
-            return this->m_value;
+            return (*this);
         }
 
         bool operator == (const T& rVal_) const

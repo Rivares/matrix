@@ -57,10 +57,10 @@ int main()
         for (size_t i = 1; i < 10; ++i)
         {
             auto [x, y, v, w] = matrix[i][i];
-            std::cout << w << ' ' << '\n'; // TODO
+            std::cout << v << ' ' << '\n'; // TODO
         }
 
-        std::cout << "Size of matix = " << matrix.size();
+        std::cout << "\nSize of matix = " << matrix.size() << '\n';
 
         for(auto item: matrix)
         {
