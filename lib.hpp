@@ -60,7 +60,13 @@ public:
             if (val_ != m_parent->m_defValue)
             {
                 this->m_value = val_;
-                m_parent->m_data.insert({this->m_i, this->m_j, this->m_value});
+                std::tuple<T, T, T> newTuple = {this->m_i, this->m_j, this->m_value};
+                if (auto pairResult = m_parent->m_data.insert(newTuple);
+                        pairResult.second == false)
+                {
+                    m_parent->m_data.erase(newTuple);
+                    m_parent->m_data.insert(newTuple);
+                }
             }
             else
             {
@@ -75,7 +81,7 @@ public:
             std::cout << __PRETTY_FUNCTION__ << '\n';
 
             if (auto it = m_parent->m_data.find({m_i, m_j, m_value}); it != m_parent->m_data.end())
-            {   return (std::get<2>((*it)) == rVal_);  }
+            {   return (std::get<2>(*it) == rVal_);  }
 
             return false;
         }
@@ -111,18 +117,17 @@ public:
         }
     };
 
-    Node& operator [] (const T& i_)
+    Node operator [] (const T& i_)
     {
         std::cout << __PRETTY_FUNCTION__ << '\n';
 
-        Node* obj = new Node();
         if (i_ >= 0)
         {
-            obj = new Node(this, m_defValue, i_);
-            return *obj;
+            Node obj(this, m_defValue, i_);
+            return obj;
         }
 
-        return *obj;
+        return Node();
     }
 
 

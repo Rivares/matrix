@@ -64,10 +64,10 @@ TEST(TestGroupName, Subtest_2)
     // ---------
 
     matrix[1][2] = 8;
-    matrix[1][2] = 8;
+    matrix[1][2] = 9;
 
     EXPECT_EQ(matrix.size(), 1);    // нет дубляжей
-    EXPECT_TRUE(matrix[1][2] == 8);
+    EXPECT_TRUE(matrix[1][2] == 9); //
 }
 
 TEST(TestGroupName, Subtest_3)
@@ -80,16 +80,16 @@ TEST(TestGroupName, Subtest_3)
     // ---------
 
     matrix[1][2] = 8;
-    matrix[1][2] = 8;
+    matrix[1][2] = 9;
 
     EXPECT_EQ(matrix.size(), 1);    // нет дубляжей
-    EXPECT_TRUE(matrix[1][2] == 8);
+    EXPECT_TRUE(matrix[1][2] == 9);
 
     // ---------
 
     auto a = matrix[1][2];
 
-    EXPECT_TRUE(a == 8);                // проверка возврата ссылки из операторов
+    EXPECT_TRUE(a == 9);                // проверка возврата ссылки из операторов
     EXPECT_EQ(matrix.size(), 1);    // сверка текущего размера
 }
 
@@ -103,16 +103,16 @@ TEST(TestGroupName, Subtest_4)
     // ---------
 
     matrix[1][2] = 8;
-    matrix[1][2] = 8;
+    matrix[1][2] = 9;
 
     EXPECT_EQ(matrix.size(), 1);    // нет дубляжей
-    EXPECT_TRUE(matrix[1][2] == 8);
+    EXPECT_TRUE(matrix[1][2] == 9);
 
     // ---------
 
     auto a = matrix[1][2];
 
-    EXPECT_TRUE(a == 8);                // проверка возврата ссылки из операторов
+    EXPECT_TRUE(a == 9);                // проверка возврата ссылки из операторов
     EXPECT_EQ(matrix.size(), 1);    // сверка текущего размера
 
     // ---------
@@ -125,7 +125,8 @@ TEST(TestGroupName, Subtest_4)
 
 
     ((matrix[100][101] = 314) = 0) = 217;   // проверка возврата ссылки из операторов. И перезаписи её значения
-    EXPECT_EQ(matrix.size(), 3);    // сверка текущего размера
+    EXPECT_EQ(matrix.size(), 3);            // сверка текущего размера
+    EXPECT_TRUE(matrix[100][101] == 217);
 }
 
 TEST(TestGroupName, Subtest_5)
@@ -138,29 +139,30 @@ TEST(TestGroupName, Subtest_5)
     // ---------
 
     matrix[1][2] = 8;
-    matrix[1][2] = 8;
+    matrix[1][2] = 9;
 
     EXPECT_EQ(matrix.size(), 1);    // нет дубляжей
-    EXPECT_TRUE(matrix[1][2] == 8);
+    EXPECT_TRUE(matrix[1][2] == 9);
 
     // ---------
 
     auto a = matrix[1][2];
 
-    EXPECT_TRUE(a == 8);                // проверка возврата ссылки из операторов
-    EXPECT_EQ(matrix.size(), 1);    // сверка текущего размера
+    EXPECT_TRUE(a == 9);                // проверка возврата ссылки из операторов
+    EXPECT_EQ(matrix.size(), 1);        // сверка текущего размера
 
     // ---------
 
     matrix[100][100] = 314;
 
     EXPECT_TRUE(matrix[100][100] == 314);
-    EXPECT_EQ(matrix.size(), 2);    // сверка текущего размера
+    EXPECT_EQ(matrix.size(), 2);            // сверка текущего размера
 
 
 
     ((matrix[100][101] = 314) = 0) = 217;   // проверка возврата ссылки из операторов. И перезаписи её значения
-    EXPECT_EQ(matrix.size(), 3);    // сверка текущего размера
+    EXPECT_EQ(matrix.size(), 3);            // сверка текущего размера
+    EXPECT_TRUE(matrix[100][101] == 217);
 
     // ---------
 
